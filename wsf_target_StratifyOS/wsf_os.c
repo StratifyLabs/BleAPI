@@ -22,6 +22,8 @@
  */
 /*************************************************************************************************/
 
+// Modications for Stratify OS, Copyright 2020 Stratify Labs, Inc
+
 #ifdef __IAR_SYSTEMS_ICC__
 #include <intrinsics.h>
 #endif
@@ -105,9 +107,6 @@ wsfOs_t wsfOs;
 wsfHandlerId_t WsfActiveHandler;
 #endif /* WSF_OS_DIAG */
 
-#if defined (RTOS_CMSIS_RTX) && (RTOS_CMSIS_RTX == 1)
-static osThreadId_t wsfOsThreadId;
-#endif
 
 /*************************************************************************************************/
 /*!
@@ -308,60 +307,6 @@ void wsfOsDispatcher(void)
     }
   }
 }
-
-#if defined (RTOS_CMSIS_RTX) && (RTOS_CMSIS_RTX == 1)
-/*************************************************************************************************/
-/*!
- *  \brief  Idle thread.
- *
- *  \param  pArg   Pointer to argument.
- */
-/*************************************************************************************************/
-void osRtxIdleThread(void *pArg)
-{
-  bool_t activeFlag = FALSE;
-
-  (void) pArg;
-
-  while(TRUE)
-  {
-    activeFlag = FALSE;
-
-    for (unsigned int i = 0; i < wsfOs.numFunc; i++)
-    {
-      if (wsfOs.sleepCheckFuncs[i])
-      {
-        activeFlag |= wsfOs.sleepCheckFuncs[i]();
-      }
-    }
-
-    if (!activeFlag)
-    {
-      WsfTimerSleep();
-    }
-    osThreadFlagsSet(wsfOsThreadId, WSF_OS_THREAD_SLEEP_WAKEUP_FLAG);
-  }
-}
-
-/*************************************************************************************************/
-/*!
- *  \brief  Main thread.
- *
- *  \param  pArg   Pointer to argument.
- */
-/*************************************************************************************************/
-void wsfThread(void *pArg)
-{
-  (void) pArg;
-
-  while(TRUE)
-  {
-    WsfTimerSleepUpdate();
-    wsfOsDispatcher();
-    osThreadFlagsWait(WSF_OS_THREAD_SLEEP_WAKEUP_FLAG, osFlagsWaitAny ,osWaitForever);
-  }
-}
-#endif
 
 /*************************************************************************************************/
 /*!

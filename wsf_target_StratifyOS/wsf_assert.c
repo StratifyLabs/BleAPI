@@ -62,5 +62,4 @@ void WsfAssert(const char *pFile, uint16_t line)
   WSF_TRACE_ERR2("Assertion detected on %s:%u", pFile, line);
 #endif
 
-  PalSysAssertTrap();
 }
