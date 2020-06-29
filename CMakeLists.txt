@@ -31,14 +31,13 @@ set(HOST_DIR ${STACKS_DIR}/ble-host)
 set(WSF_DIR ${STACKS_DIR}/wsf)
 set(PROFILES_DIR ${STACKS_DIR}/ble-profiles)
 set(SERVICES_DIR ${PROFILES_DIR}/sources/services)
-set(WSF_TARGET_STRATIFYOS_DIR ${CMAKE_SOURCE_DIR}/wsf_target_StratifyOS)
+set(PORTING_DIR ${CMAKE_SOURCE_DIR}/porting)
 
 list(APPEND
   SOS_INCLUDE_DIRECTORIES
   ${STACK_DIR}/ble-host/sources/hci/dual_chip
   ${HOST_DIR}/include
 	${HOST_DIR}/sources/stack/att
-	${HOST_DIR}/sources/stack/cfg
 	${HOST_DIR}/sources/stack/dm
 	${HOST_DIR}/sources/stack/hci
 	${HOST_DIR}/sources/stack/l2c
@@ -50,6 +49,7 @@ list(APPEND
 	${PROFILES_DIR}/sources/profiles/include
   ${PROFILES_DIR}/sources/profiles
   ${PROFILES_DIR}/sources/af
+  ${PORTING_DIR}/cfg
 	)
 
 #Add sources to the project
@@ -76,7 +76,6 @@ set(HOST_SOURCES
   ${HOST_DIR}/sources/stack/att/atts_sign.c
   ${HOST_DIR}/sources/stack/att/atts_write.c
   ${HOST_DIR}/sources/stack/att/atts_eatt.c
-  ${HOST_DIR}/sources/stack/cfg/cfg_stack.c
   ${HOST_DIR}/sources/stack/dm/dm_adv.c
   ${HOST_DIR}/sources/stack/dm/dm_adv_ae.c
   ${HOST_DIR}/sources/stack/dm/dm_adv_leg.c
@@ -231,20 +230,21 @@ set(AF_SOURCES
   ${PROFILES_DIR}/sources/af/common/ui_timer.c
 )
 
-set(WSF_TARGET_STRATIFYOS_SOURCES
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_assert.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_buf.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_bufio.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_cs.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_detoken.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_efs.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_heap.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_msg.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_nvm.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_os.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_queue.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_timer.c
-  ${WSF_TARGET_STRATIFYOS_DIR}/wsf_trace.c
+set(PORTING_SOURCES
+  ${PORTING_DIR}/wsf_assert.c
+  ${PORTING_DIR}/wsf_buf.c
+  ${PORTING_DIR}/wsf_bufio.c
+  ${PORTING_DIR}/wsf_cs.c
+  ${PORTING_DIR}/wsf_detoken.c
+  ${PORTING_DIR}/wsf_efs.c
+  ${PORTING_DIR}/wsf_heap.c
+  ${PORTING_DIR}/wsf_msg.c
+  ${PORTING_DIR}/wsf_nvm.c
+  ${PORTING_DIR}/wsf_os.c
+  ${PORTING_DIR}/wsf_queue.c
+  ${PORTING_DIR}/wsf_timer.c
+  ${PORTING_DIR}/wsf_trace.c
+  ${PORTING_DIR}/cfg/cfg_stack.c
 )
 
 set(SOS_SOURCELIST
@@ -252,7 +252,7 @@ set(SOS_SOURCELIST
   ${SERVICES_SOURCES}
   ${PROFILES_SOURCES}
   ${AF_SOURCES}
-  ${WSF_TARGET_STRATIFYOS_SOURCES}
+  ${PORTING_SOURCES}
 )
 
 

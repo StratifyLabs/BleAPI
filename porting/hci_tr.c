@@ -102,6 +102,12 @@ void hciTrSendCmd(uint8_t *pCmdData)
 }
 
 
+/* This is never called by the stack.
+ * It needs to be set up to run in a thread or be
+ * added to the superloop on some kind of timer
+ * or event trigger to poll the UART/SPI
+ * or whatever the transport is.
+ */ 
 void hciTrReceive(){
-  //need to call hciCoreRecv when a packet has fully arrived
+  //need to call hciCoreRecv() when a packet has fully arrived
 }
