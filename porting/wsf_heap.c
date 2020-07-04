@@ -22,6 +22,7 @@
  */
 /*************************************************************************************************/
 
+#include <stdlib.h>
 #include "wsf_types.h"
 #include "wsf_assert.h"
 #include "wsf_cs.h"
