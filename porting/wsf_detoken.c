@@ -249,4 +249,6 @@ bool_t WsfDetokenProcessHciEvent(uint16_t len, uint8_t *pBuffer)
   return FALSE;
 }
 
-#endif /* WSF_DETOKEN_TRACE */
+#else /* WSF_DETOKEN_TRACE */
+const int wsf_detoken_no_warning = 0;
+#endif

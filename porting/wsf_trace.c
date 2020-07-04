@@ -30,6 +30,7 @@
 #include "util/print.h"
 #include "pal_sys.h"
 #include <stdarg.h>
+#include <stdio.h>
 #include "wsf_assert.h"
 #include "wsf_cs.h"
 
@@ -220,7 +221,7 @@ void WsfTrace(const char *pStr, ...)
     }
 
     /* Format message. */
-    len = PrintVsn(buf, WSF_PRINTF_MAX_LEN - WSF_TRACE_SUFFIX_LEN, pStr, args);
+		len = vsnprintf(buf, WSF_PRINTF_MAX_LEN - WSF_TRACE_SUFFIX_LEN, pStr, args);
     buf[len++] = '\r';
     buf[len++] = '\n';
 

@@ -32,19 +32,22 @@ set(WSF_DIR ${STACKS_DIR}/wsf)
 set(PROFILES_DIR ${STACKS_DIR}/ble-profiles)
 set(SERVICES_DIR ${PROFILES_DIR}/sources/services)
 set(PORTING_DIR ${CMAKE_SOURCE_DIR}/porting)
+set(APP_DIR ${STACKS_DIR}/ble-apps/sources)
 
 list(APPEND
   SOS_INCLUDE_DIRECTORIES
-  ${STACK_DIR}/ble-host/sources/hci/dual_chip
+	${STACKS_DIR}/ble-host/sources/hci/dual_chip
   ${HOST_DIR}/include
 	${HOST_DIR}/sources/stack/att
 	${HOST_DIR}/sources/stack/dm
 	${HOST_DIR}/sources/stack/hci
 	${HOST_DIR}/sources/stack/l2c
 	${HOST_DIR}/sources/stack/smp
+	${HOST_DIR}/sources/stack/smp
 	${WSF_DIR}/include
 	${STACKS_DIR}/platform/include
-  ${PROFILES_DIR}/include
+	${APP_DIR}
+	${PROFILES_DIR}/include
   ${PROFILES_DIR}/sources/services
 	${PROFILES_DIR}/sources/profiles/include
   ${PROFILES_DIR}/sources/profiles
@@ -135,6 +138,21 @@ set(HOST_SOURCES
   ${HOST_DIR}/sources/sec/common/sec_ecc_debug.c
   ${HOST_DIR}/sources/sec/common/sec_ecc_hci.c
   ${HOST_DIR}/sources/sec/common/sec_main.c
+	${HOST_DIR}/sources/hci/common/hci_core.c
+	${HOST_DIR}/sources/hci/common/hci_tr.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_ae.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_bis.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_cis.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_cte.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_iso.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_past.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_cmd_phy.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_core_ps.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_core_ps.h
+	${HOST_DIR}/sources/hci/dual_chip/hci_evt.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_vs.c
+	${HOST_DIR}/sources/hci/dual_chip/hci_vs_ae.c
 )
 
 set(SERVICES_SOURCES
@@ -230,6 +248,61 @@ set(AF_SOURCES
   ${PROFILES_DIR}/sources/af/common/ui_timer.c
 )
 
+set(APP_SOURCES
+	${APP_DIR}/assettag/assettag_api.h
+	${APP_DIR}/assettag/assettag_main.c
+	${APP_DIR}/cycling/cycling_api.h
+	${APP_DIR}/cycling/cycling_main.c
+	${APP_DIR}/datc/datc_api.h
+	${APP_DIR}/datc/datc_main.c
+	${APP_DIR}/dats/dats_api.h
+	${APP_DIR}/dats/dats_main.c
+	${APP_DIR}/fit/fit_api.h
+	${APP_DIR}/fit/fit_main.c
+	${APP_DIR}/gluc/gluc_api.h
+	${APP_DIR}/gluc/gluc_main.c
+	${APP_DIR}/hidapp/hidapp_api.h
+	${APP_DIR}/hidapp/hidapp_main.c
+	${APP_DIR}/locator/locator_api.h
+	${APP_DIR}/locator/locator_main.c
+	${APP_DIR}/medc/medc_api.h
+	${APP_DIR}/medc/medc_blp.c
+	${APP_DIR}/medc/medc_glp.c
+	${APP_DIR}/medc/medc_hrp.c
+	${APP_DIR}/medc/medc_htp.c
+	${APP_DIR}/medc/medc_main.c
+	${APP_DIR}/medc/medc_main.h
+	${APP_DIR}/medc/medc_plx.c
+	${APP_DIR}/medc/medc_wsp.c
+	${APP_DIR}/meds/meds_api.h
+	${APP_DIR}/meds/meds_blp.c
+	${APP_DIR}/meds/meds_glp.c
+	${APP_DIR}/meds/meds_htp.c
+	${APP_DIR}/meds/meds_main.c
+	${APP_DIR}/meds/meds_main.h
+	${APP_DIR}/meds/meds_plx.c
+	${APP_DIR}/meds/meds_wsp.c
+	${APP_DIR}/sensor/sensor_api.h
+	${APP_DIR}/sensor/sensor_main.c
+	${APP_DIR}/tag/tag_api.h
+	${APP_DIR}/tag/tag_main.c
+	${APP_DIR}/tag/tag_main_wdxs.c
+	${APP_DIR}/uribeacon/uribeacon_api.h
+	${APP_DIR}/uribeacon/uribeacon_main.c
+	${APP_DIR}/watch/watch_api.h
+	${APP_DIR}/watch/watch_main.c
+	)
+
+set(WSF_SOURCES
+	${WSF_DIR}/sources/util/bda.c
+	${WSF_DIR}/sources/util/bstream.c
+	${WSF_DIR}/sources/util/calc128.c
+	${WSF_DIR}/sources/util/crc32.c
+	${WSF_DIR}/sources/util/fcs.c
+	${WSF_DIR}/sources/util/prand.c
+	${WSF_DIR}/sources/util/wstr.c
+	)
+
 set(PORTING_SOURCES
   ${PORTING_DIR}/wsf_assert.c
   ${PORTING_DIR}/wsf_buf.c
@@ -243,8 +316,10 @@ set(PORTING_SOURCES
   ${PORTING_DIR}/wsf_os.c
   ${PORTING_DIR}/wsf_queue.c
   ${PORTING_DIR}/wsf_timer.c
-  ${PORTING_DIR}/wsf_trace.c
-  ${PORTING_DIR}/cfg/cfg_stack.c
+	${PORTING_DIR}/wsf_trace.c
+	${PORTING_DIR}/hci_tr.c
+	${PORTING_DIR}/cfg/cfg_stack.c
+	${PORTING_DIR}/cfg/cfg_stack.h
 )
 
 set(SOS_SOURCELIST
@@ -252,9 +327,17 @@ set(SOS_SOURCELIST
   ${SERVICES_SOURCES}
   ${PROFILES_SOURCES}
   ${AF_SOURCES}
+	${WSF_SOURCES}
   ${PORTING_SOURCES}
+	${APP_SOURCES}
 )
 
+SET(SOS_DEFINITIONS
+	WSF_TRACE_ENABLED=1
+	WSF_TOKEN_ENABLED=1
+	MODULE_ID=4
+	WSF_ASSERT_ENABLED=1
+	)
 
 #install(DIRECTORY zephyr/include/bluetooth DESTINATION include/zephyr_ble)
 include( ${CMAKE_SOURCE_DIR}/${SOS_BUILD_CONFIG}.cmake )

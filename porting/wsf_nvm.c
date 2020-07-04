@@ -82,9 +82,9 @@ static struct
 /*************************************************************************************************/
 void WsfNvmInit(void)
 {
-  PalFlashInit(NULL);
-  wsfNvmCb.totalSize = PalNvmGetTotalSize();
-  wsfNvmCb.sectorSize = PalNvmGetSectorSize();
+	// PalFlashInit(NULL);
+	wsfNvmCb.totalSize = 0; // PalNvmGetTotalSize();
+	wsfNvmCb.sectorSize = 0; // PalNvmGetSectorSize();
 
   WsfNvmHeader_t header;
   uint32_t storageAddr = WSF_NVM_START_ADDR;
@@ -94,7 +94,7 @@ void WsfNvmInit(void)
   do
   {
     /* Read header. */
-    PalFlashRead(&header, sizeof(header), storageAddr);
+		// PalFlashRead(&header, sizeof(header), storageAddr);
 
     if (header.id == WSF_NVM_UNUSED_FILECODE)
     {
@@ -140,7 +140,7 @@ void WsfNvmInit(void)
     /* Search for the first available location */
     while ((storageAddr - WSF_NVM_START_ADDR) < wsfNvmCb.totalSize)
     {
-      PalFlashRead(&header.id, sizeof(header.id), storageAddr);
+			// PalFlashRead(&header.id, sizeof(header.id), storageAddr);
 
       if (header.id == WSF_NVM_UNUSED_FILECODE)
       {
@@ -180,7 +180,7 @@ bool_t WsfNvmReadData(uint64_t id, uint8_t *pData, uint16_t len, WsfNvmCompEvent
   WSF_ASSERT(!((id == WSF_NVM_RESERVED_FILECODE) || (id == WSF_NVM_UNUSED_FILECODE)));
 
   /* Read first header. */
-  PalFlashRead(&header, sizeof(header), storageAddr);
+	// PalFlashRead(&header, sizeof(header), storageAddr);
 
   do
   {
@@ -207,7 +207,7 @@ bool_t WsfNvmReadData(uint64_t id, uint8_t *pData, uint16_t len, WsfNvmCompEvent
       {
         /* Valid header and matching ID - read data after header. */
         storageAddr += sizeof(header);
-        PalFlashRead(pData, header.len, storageAddr);
+				// PalFlashRead(pData, header.len, storageAddr);
         dataCrc = CalcCrc32(WSF_NVM_CRC_INIT_VALUE, header.len, pData);
         if (dataCrc == header.dataCrc)
         {
@@ -219,7 +219,7 @@ bool_t WsfNvmReadData(uint64_t id, uint8_t *pData, uint16_t len, WsfNvmCompEvent
 
     /* Move to next stored data block and read header. */
     storageAddr += WSF_NVM_WORD_ALIGN(header.len) + sizeof(header);
-    PalFlashRead(&header, sizeof(header), storageAddr);
+		// PalFlashRead(&header, sizeof(header), storageAddr);
   } while(1);
 
   if (compCback)
@@ -251,7 +251,7 @@ bool_t WsfNvmWriteData(uint64_t id, const uint8_t *pData, uint16_t len, WsfNvmCo
   WSF_ASSERT((wsfNvmCb.availAddr - WSF_NVM_START_ADDR) <= wsfNvmCb.totalSize);
 
   /* Read first header. */
-  PalFlashRead(&header, sizeof(header), storageAddr);
+	// PalFlashRead(&header, sizeof(header), storageAddr);
 
   do
   {
@@ -291,14 +291,14 @@ bool_t WsfNvmWriteData(uint64_t id, const uint8_t *pData, uint16_t len, WsfNvmCo
           header.id = WSF_NVM_RESERVED_FILECODE;
           header.headerCrc = 0;
           header.dataCrc = 0;
-          PalFlashWrite(&header, sizeof(header), storageAddr);
+					// PalFlashWrite(&header, sizeof(header), storageAddr);
         }
       }
     }
 
     /* Move to next stored data block and read header. */
     storageAddr += WSF_NVM_WORD_ALIGN(header.len) + sizeof(header);
-    PalFlashRead(&header, sizeof(header), storageAddr);
+		// PalFlashRead(&header, sizeof(header), storageAddr);
   } while(1);
 
   /* After cycling through all headers, create a new stored data header and store data */
@@ -308,8 +308,8 @@ bool_t WsfNvmWriteData(uint64_t id, const uint8_t *pData, uint16_t len, WsfNvmCo
                                (uint8_t *)&header);
   header.dataCrc = CalcCrc32(WSF_NVM_CRC_INIT_VALUE, len, pData);
 
-  PalFlashWrite(&header, sizeof(header), storageAddr);
-  PalFlashWrite((void *)pData, len, storageAddr + sizeof(header));
+	// PalFlashWrite(&header, sizeof(header), storageAddr);
+	// PalFlashWrite((void *)pData, len, storageAddr + sizeof(header));
 
   /* Move to next empty flash. */
   storageAddr += WSF_NVM_WORD_ALIGN(header.len) + sizeof(header);
@@ -343,7 +343,7 @@ bool_t WsfNvmEraseData(uint64_t id, WsfNvmCompEvent_t compCback)
   WSF_ASSERT(!((id == WSF_NVM_RESERVED_FILECODE) || (id == WSF_NVM_UNUSED_FILECODE)));
 
   /* Read first header. */
-  PalFlashRead(&header, sizeof(header), storageAddr);
+	// PalFlashRead(&header, sizeof(header), storageAddr);
 
   do
   {
@@ -370,14 +370,14 @@ bool_t WsfNvmEraseData(uint64_t id, WsfNvmCompEvent_t compCback)
         header.id = WSF_NVM_RESERVED_FILECODE;
         header.headerCrc = 0;
         header.dataCrc = 0;
-        PalFlashWrite(&header, sizeof(header), storageAddr);
+				// PalFlashWrite(&header, sizeof(header), storageAddr);
         erased = TRUE;
       }
     }
 
     /* Move to next stored data block and read header. */
     storageAddr += WSF_NVM_WORD_ALIGN(header.len) + sizeof(header);
-    PalFlashRead(&header, sizeof(header), storageAddr);
+		// PalFlashRead(&header, sizeof(header), storageAddr);
   } while(1);
 
   if (compCback)
@@ -400,7 +400,7 @@ void WsfNvmEraseDataAll(WsfNvmCompEvent_t compCback)
 {
   for (uint32_t eraseAddr = WSF_NVM_START_ADDR; eraseAddr < wsfNvmCb.availAddr; eraseAddr += wsfNvmCb.sectorSize)
   {
-    PalFlashEraseSector(1, eraseAddr);
+		// PalFlashEraseSector(1, eraseAddr);
   }
   wsfNvmCb.availAddr = WSF_NVM_START_ADDR;
 

@@ -1,0 +1,15 @@
+{
+	 "description": "Sample Project for building BLE application on Stratify OS.",
+	 "github": "https://github.com/StratifyLabs/BleAPI",
+	 "name": "BleApp",
+   "permissions": "public",
+   "publisher": "Stratify Labs, Inc",
+   "tags": "utility",
+   "type": "app",
+   "uid": "9cQyOTk3fZXOuMtPyf5j9X4H4b83",
+	 "version": "0.1",
+   "ramSize": 0,
+   "timestamp": 1589779994,
+	 "documentId": "",
+   "hardwareId": ""
+}

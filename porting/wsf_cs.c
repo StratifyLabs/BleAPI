@@ -75,7 +75,7 @@ static void wsfCsStatsEnter(void)
 {
   /* N.B. Code path must not use critical sections. */
 
-  wsfCsStatsStartTimeValid = PalBbGetTimestamp(&wsfCsStatsStartTime);
+	wsfCsStatsStartTimeValid = // PalBbGetTimestamp(&wsfCsStatsStartTime);
 }
 
 /*************************************************************************************************/
@@ -94,7 +94,7 @@ static void wsfCsStatsExit(void)
 
   uint32_t exitTime;
 
-  if (PalBbGetTimestamp(&exitTime))
+	if (// PalBbGetTimestamp(&exitTime))
   {
     uint32_t durUsec = exitTime - wsfCsStatsStartTime;
     if (durUsec > wsfCsStatsWatermarkUsec)
@@ -115,7 +115,7 @@ void WsfCsEnter(void)
 {
   if (wsfCsNesting == 0)
   {
-    PalEnterCs();
+		// PalEnterCs();
 
 #if (WSF_CS_STATS == TRUE)
     wsfCsStatsEnter();
@@ -140,6 +140,6 @@ void WsfCsExit(void)
     wsfCsStatsExit();
 #endif
 
-    PalExitCs();
+		// PalExitCs();
   }
 }

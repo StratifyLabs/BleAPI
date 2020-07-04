@@ -196,6 +196,8 @@ void StackGetVersionNumber(const char **pVersion);
 
 /*! \} */    /* STACK_INIT */
 
+
+
 #ifdef __cplusplus
 };
 #endif
